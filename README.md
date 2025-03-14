@@ -11,7 +11,7 @@ Bem-vindo ao repositório do **Compilador PascalLite**, desenvolvido para a disc
 - [🏗️ Estrutura do Projeto](#️-estrutura-do-projeto)
 - [⚙️ Como Configurar o Ambiente](#️-como-configurar-o-ambiente)
 - [🛠️ Comandos Disponíveis no Makefile](#-comandos-disponíveis-no-makefile)
-- [📝 Funcionamento do Programa](#Funcionamento-do-programa)
+- [📝 Funcionamento do Programa](#-Funcionamento-do-programa)
 - [📖 Saiba mais na nossa wiki ](#-saiba-mais-na-wiki)
 
 ---
