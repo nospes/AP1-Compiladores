@@ -11,6 +11,7 @@ Bem-vindo ao repositório do **Compilador PascalLite**, desenvolvido para a disc
 - [🏗️ Estrutura do Projeto](#️-estrutura-do-projeto)
 - [⚙️ Como Configurar o Ambiente](#️-como-configurar-o-ambiente)
 - [🛠️ Comandos Disponíveis no Makefile](#-comandos-disponíveis-no-makefile)
+- [📝 Funcionamento do Programa](#Funcionamento-do-programa)
 - [📖 Saiba mais na nossa wiki ](#-saiba-mais-na-wiki)
 
 ---
@@ -116,7 +117,10 @@ make clean
 - make all → Comando padrão para rodar todos os testes.
 
 ---
+## 📝 Funcionamento do Programa
 
+escreva aqui! 📝
+--- 
 ## 📖 Saiba Mais na Wiki
 
 - 📌 Todas as informações detalhadas sobre o projeto estão na nossa [Wiki](https://github.com/millagmgomes/AP1-Compiladores/wiki)
