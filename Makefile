@@ -10,9 +10,17 @@ install:
 	$(PYTHON) -m pip install --upgrade pip
 	$(PYTHON) -m pip install -r requirements.txt
 
-# Executar os testes
+# Executar todos os testes
 test:
-	$(PYTHON) -m unittest discover tests/
+	$(PYTHON) -m pytest -v test/
+
+# Executar apenas o teste do Lexer
+test_lexer:
+	$(PYTHON) -m pytest -v test/test_lexer.py
+
+# Executar apenas o teste do Parser
+test_parser:
+	$(PYTHON) -m pytest -v test/test_parser.py
 
 # Executar o Lexer manualmente com `main.py`
 run:

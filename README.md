@@ -23,18 +23,10 @@ O **PascalLite** é uma versão simplificada da linguagem Pascal, contendo apena
 ├── 📂 `src/` → Código-fonte do compilador  
 ├── 📂 `tests/` → Testes automatizados  
 ├── 📄 `README.md` → Este arquivo  
-├── 📄 `requirements.txt` → Dependências do projeto  
-├── 📂 `.github/workflows/` → Configuração do GitHub Actions
+├── 📄 `requirements.txt` → Dependências do projeto
 
 ## 📖 Saiba Mais na Wiki
 
 📌 **Todas as informações detalhadas sobre o projeto estão na nossa [Wiki](https://github.com/millagmgomes/AP1-Compiladores/wiki).**
-
-Lá você encontrará:
-
-- 📜 **Especificações do compilador PascalLite**
-- 🔍 **Detalhes sobre a Análise Léxica e Sintática**
-- 🚦 **Status do desenvolvimento e próximas etapas**
-- 🤝 **Como contribuir e se organizar no projeto**
 
 📢 **Dúvidas?** Verifique a Wiki ou entre no **grupo do WhatsApp** para suporte! 🚀

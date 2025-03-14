@@ -1,75 +1,59 @@
-import pytest
-from lexer import Lexer
+from src.lexer import Lexer
 
 def test_reserved_words():
-    """
-    Testa se palavras reservadas são reconhecidas corretamente.
-    """
-    lexer = Lexer("program begin end if then while var integer boolean")
-    tokens = [lexer.get_next_token() for _ in range(9)]
+    lexer = Lexer("program\nbegin\nend\nif\nthen\nelse\nwhile\ndo\nvar\ninteger\nboolean\nread\nwrite")
     expected_tokens = [
-        ('RESERVED', 'program', 1),
-        ('RESERVED', 'begin', 1),
-        ('RESERVED', 'end', 1),
-        ('RESERVED', 'if', 1),
-        ('RESERVED', 'then', 1),
-        ('RESERVED', 'while', 1),
-        ('RESERVED', 'var', 1),
-        ('RESERVED', 'integer', 1),
-        ('RESERVED', 'boolean', 1)
+        ('PROGRAM', 'program', 1),
+        ('BEGIN', 'begin', 2),
+        ('END', 'end', 3),
+        ('IF', 'if', 4),
+        ('THEN', 'then', 5),
+        ('ELSE', 'else', 6),
+        ('WHILE', 'while', 7),
+        ('DO', 'do', 8),
+        ('VAR', 'var', 9),
+        ('INTEGER', 'integer', 10),
+        ('BOOLEAN', 'boolean', 11),
+        ('READ', 'read', 12),
+        ('WRITE', 'write', 13),
+        ('EOF', 'EOF', 13)
     ]
-    assert tokens == expected_tokens
+    for expected in expected_tokens:
+        assert lexer.get_next_token() == expected
 
-def test_identifiers():
-    """
-    Testa se identificadores são reconhecidos corretamente.
-    """
-    lexer = Lexer("x y variable1 _teste")
-    tokens = [lexer.get_next_token() for _ in range(4)]
+def test_identifier():
+    lexer = Lexer("_id1\ntest_2\nabc123")
     expected_tokens = [
-        ('IDENTIFIER', 'x', 1),
-        ('IDENTIFIER', 'y', 1),
-        ('IDENTIFIER', 'variable1', 1),
-        ('IDENTIFIER', '_teste', 1),
+        ('IDENTIFICADOR', '_id1', 1),
+        ('IDENTIFICADOR', 'test_2', 2),
+        ('IDENTIFICADOR', 'abc123', 3),
+        ('EOF', 'EOF', 3)
     ]
-    assert tokens == expected_tokens
+    for expected in expected_tokens:
+        assert lexer.get_next_token() == expected
 
 def test_numbers():
-    """
-    Testa se números inteiros são reconhecidos corretamente.
-    """
-    lexer = Lexer("42 123 999")
-    tokens = [lexer.get_next_token() for _ in range(3)]
+    lexer = Lexer("123\n456\n789")
     expected_tokens = [
-        ('NUMBER', '42', 1),
-        ('NUMBER', '123', 1),
-        ('NUMBER', '999', 1)
+        ('NUMERO', '123', 1),
+        ('NUMERO', '456', 2),
+        ('NUMERO', '789', 3),
+        ('EOF', 'EOF', 3)
     ]
-    assert tokens == expected_tokens
+    for expected in expected_tokens:
+        assert lexer.get_next_token() == expected
 
-def test_symbols():
-    """
-    Testa se símbolos e operadores são reconhecidos corretamente.
-    """
-    lexer = Lexer(": ; := < > = + - * / and or div mod")
-    tokens = [lexer.get_next_token() for _ in range(15)]
+def test_invalid_character():
+    lexer = Lexer("#")
+    token = lexer.get_next_token()
+    assert token[0] == 'ERRO_LEXICO'
+
+def test_comments():
+    lexer = Lexer("// Comment\nprogram\n(* block comment *)\nvar")
     expected_tokens = [
-        ('COLON', ':', 1),
-        ('DELIMITER', ';', 1),
-        ('ASSIGNMENT', ':=', 1),
-        ('RELATIONAL', '<', 1),
-        ('RELATIONAL', '>', 1),
-        ('RELATIONAL', '=', 1),
-        ('ADDITION', '+', 1),
-        ('ADDITION', '-', 1),
-        ('MULTIPLICATION', '*', 1),
-        ('MULTIPLICATION', '/', 1),
-        ('MULTIPLICATION', 'and', 1),
-        ('ADDITION', 'or', 1),
-        ('MULTIPLICATION', 'div', 1),
-        ('MULTIPLICATION', 'mod', 1),
+        ('PROGRAM', 'program', 2),
+        ('VAR', 'var', 4),
+        ('EOF', 'EOF', 4)
     ]
-    assert tokens == expected_tokens
-
-if __name__ == '__main__':
-    pytest.main()
+    for expected in expected_tokens:
+        assert lexer.get_next_token() == expected

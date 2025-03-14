@@ -7,66 +7,66 @@ class Lexer:
         self.line = 1
 
         self.reserved_words = {
-            "begin", "boolean", "div", "do", "else", "end", "false", "if", "integer",
-            "mod", "program", "read", "then", "true", "not", "var", "while", "write"
+            "begin": "BEGIN", "boolean": "BOOLEAN", "div": "DIV", "do": "DO",
+            "else": "ELSE", "end": "END", "false": "FALSE", "if": "IF",
+            "integer": "INTEGER", "mod": "MOD", "program": "PROGRAM",
+            "read": "READ", "then": "THEN", "true": "TRUE", "not": "NOT",
+            "var": "VAR", "while": "WHILE", "write": "WRITE"
         }
 
         self.token_patterns = [
-            (r'\s+', None),  # Espaços em branco e quebras de linha
+            (r'[ \t\r]+', None),  # Ignorar espaços e tabulações
+            (r'\n', self.handle_newline),  # Contar nova linha
             (r'//.*', None),  # Comentário de linha
             (r'\(\*[\s\S]*?\*\)', None),  # Comentário de bloco (* ... *)
             (r'\{[\s\S]*?\}', None),  # Comentário de bloco { ... }
-            (r':=', 'ATRIBUICAO'),  # Atribuição :=
-            (r':', 'DOIS_PONTOS'),  # Dois pontos :
-            (r'<>|>=|<=|>|<|=', 'RELACIONAL'),  # Operadores relacionais
-            (r'\+|-|or', 'ADICAO'),  # Operadores de adição
-            (r'\*|/|div|mod|and', 'MULTIPLICACAO'),  # Operadores de multiplicação
-            (r'[();,\.]', 'DELIMITADOR'),  # Delimitadores
-            (r'\b(?:' + '|'.join(self.reserved_words) + r')\b', self.handle_reserved_word),  # Palavras reservadas
-            (r'[_a-zA-Z][_a-zA-Z0-9]{0,19}', self.handle_identifier),  # Identificadores
-            (r'\d+', self.handle_number)  # Números inteiros
+            (r':=', 'ATRIBUICAO'),
+            (r':', 'DOIS_PONTOS'),
+            (r';', 'PONTO_VIRGULA'),
+            (r'\.', 'PONTO_FINAL'),
+            (r'\(', 'ABRE_PARENTESE'),
+            (r'\)', 'FECHA_PARENTESE'),
+            (r',', 'VIRGULA'),
+            (r'<>|>=|<=|>|<|=', 'RELACIONAL'),
+            (r'\+|-', 'ADICAO'),
+            (r'\*|/', 'MULTIPLICACAO'),
+            (r'\b(' + '|'.join(self.reserved_words.keys()) + r')\b', self.handle_reserved_word),
+            (r'[a-zA-Z_][a-zA-Z0-9_]{0,19}', self.handle_identifier),
+            (r'\d+', self.handle_number)
         ]
 
     def handle_reserved_word(self, lexeme):
-        """ Trata palavras reservadas diretamente """
-        return ('RESERVADA', lexeme, self.line)
+        return (self.reserved_words[lexeme.lower()], lexeme, self.line)
 
     def handle_identifier(self, lexeme):
-        """ Verifica se o identificador é válido """
-        if len(lexeme) > 20:
-            return ('ERRO', f"Identificador muito longo na linha {self.line}: {lexeme}", self.line)
         return ('IDENTIFICADOR', lexeme, self.line)
 
     def handle_number(self, lexeme):
-        """ Verifica se o número é válido """
-        if len(lexeme) > 20:
-            return ('ERRO', f"Número muito longo na linha {self.line}: {lexeme}", self.line)
         return ('NUMERO', lexeme, self.line)
 
+    def handle_newline(self, lexeme):
+        self.line += 1
+        return None
+
     def get_next_token(self):
-        """ Retorna o próximo token """
-        if self.position >= len(self.source_code):
-            return ('EOF', 'EOF', self.line)
+        while self.position < len(self.source_code):
+            substring = self.source_code[self.position:]
+            for pattern, token_type in self.token_patterns:
+                match = re.match(pattern, substring)
+                if match:
+                    lexeme = match.group(0)
+                    self.position += len(lexeme)
+                    if token_type is None:
+                        break  # Continua o loop para o próximo caractere
+                    if callable(token_type):
+                        result = token_type(lexeme)
+                        if result is None:
+                            break  # Ignora tokens como quebras de linha e continua
+                        return result
+                    return (token_type, lexeme, self.line)
+            else:
+                erro_lexema = self.source_code[self.position]
+                self.position += 1
+                return ('ERRO_LEXICO', f"Erro léxico na linha {self.line}: caractere inválido '{erro_lexema}'", self.line)
 
-        for pattern, token_type in self.token_patterns:
-            match = re.match(pattern, self.source_code[self.position:], re.DOTALL)
-            if match:
-                lexeme = match.group(0)
-                self.position += len(lexeme)
-
-                if '\n' in lexeme:
-                    self.line += lexeme.count('\n')
-
-                if token_type is None:  # Ignorar espaços e comentários
-                    return self.get_next_token()
-
-                if callable(token_type):
-                    return token_type(lexeme)
-
-                return (token_type, lexeme, self.line)
-
-        # Se nenhum padrão for encontrado, erro léxico
-        erro_lexema = self.source_code[self.position] if self.position < len(self.source_code) else "EOF"
-        erro_mensagem = f"Erro léxico na linha {self.line}: caractere inválido '{erro_lexema}'"
-        self.position += 1  # Avança para evitar loop infinito
-        return ('ERRO', erro_mensagem, self.line)
+        return ('EOF', 'EOF', self.line)

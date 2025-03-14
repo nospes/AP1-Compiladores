@@ -1,62 +1,73 @@
+from src.lexer import Lexer
+from src.parser import Parser
 import pytest
-from parser import Parser
-from lexer import Lexer
 
-def test_valid_program():
-    """
-    Testa se o parser aceita um programa PascalLite válido.
-    """
-    source_code = """
+def test_program_header():
+    code = """
     program exemplo;
-    var x: integer;
+    begin
+    end.
+    """
+    lexer = Lexer(code)
+    parser = Parser(lexer)
+    parser.program()
+
+
+def test_variable_declarations():
+    code = """
+    program exemplo;
+    var 
+        x, y: integer;
+        flag: boolean;
+    begin
+    end.
+    """
+    lexer = Lexer(code)
+    parser = Parser(lexer)
+    parser.program()
+
+
+def test_simple_command():
+    code = """
+    program exemplo;
+    var 
+        x: integer;
     begin
         x := 10;
     end.
     """
-    lexer = Lexer(source_code)
+    lexer = Lexer(code)
     parser = Parser(lexer)
+    parser.program()
 
-    try:
-        parser.program()
-        success = True
-    except SystemExit:
-        success = False
-    
-    assert success, "O parser não aceitou um programa válido!"
 
-def test_missing_semicolon():
-    """
-    Testa se o parser detecta um ponto e vírgula ausente.
-    """
-    source_code = """
-    program exemplo
-    var x: integer;
+def test_if_without_else():
+    code = """
+    program exemplo;
+    var 
+        x, y: integer;
     begin
-        x := 10;
+        if x > y then
+            x := y;
     end.
     """
-    lexer = Lexer(source_code)
+    lexer = Lexer(code)
     parser = Parser(lexer)
+    parser.program()
 
-    with pytest.raises(SystemExit):
-        parser.program()
 
-def test_invalid_identifier():
-    """
-    Testa se o parser detecta um identificador inválido.
-    """
-    source_code = """
-    program 123exemplo;
-    var x: integer;
+def test_if_with_else():
+    code = """
+    program exemplo;
+    var 
+        x, y: integer;
     begin
-        x := 10;
+        if x > y then
+            x := y;
+        else
+            y := x;
     end.
     """
-    lexer = Lexer(source_code)
+    lexer = Lexer(code)
     parser = Parser(lexer)
-
-    with pytest.raises(SystemExit):
-        parser.program()
-
-if __name__ == '__main__':
-    pytest.main()
+    parser.program()

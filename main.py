@@ -1,20 +1,25 @@
 from src.lexer import Lexer
-
+from src.parser import Parser
 
 if __name__ == "__main__":
-    source_code = """
+    code = """
     program exemplo;
-    var x: integer;
+    var
+        x, y: integer;
     begin
-        x := 10;
-        if x > 5 then write(x);
+        if x > y then
+            x := y;
+        else
+            y := x;
     end.
     """
 
-    print("\n--- Tokens Reconhecidos ---\n")
-    lexer = Lexer(source_code)
-    while True:
-        token = lexer.get_next_token()
-        print(f"Linha {token[2]:<3} -> Tipo: {token[0]:<15} Lexema: {token[1]}")
-        if token[0] == 'EOF':
-            break
+    lexer = Lexer(code)
+    parser = Parser(lexer)
+    
+    try:
+        parser.program()
+        print("Programa analisado com sucesso!")
+    except SystemExit:
+        print("Erro durante a análise do programa.")
+        
