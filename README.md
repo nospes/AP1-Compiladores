@@ -119,8 +119,49 @@ make clean
 ---
 ## 📝 Funcionamento do Programa
 
-escreva aqui! 📝
+O compilador interpreta uma linguagem estilo Pascal (PascalLite), fazendo:
+- Análise léxica (identificação de tokens)
+- Análise sintática (estrutura do código)
+- Análise semântica (verificação de variáveis)
+- Geração de código intermediário (MEPA)
+
+- 
+1. Acesse o arquivo `main.py`
+2. No final do arquivo, insira o código em PascalLite dentro da variável `code`:
+
+```python
+if __name__ == "__main__":
+    code = """
+    program exemplo;
+    var x, y: integer;
+    begin
+        x := 10;
+        write(x);
+    end.
+    """
+```
+
+3. Execute o arquivo com:
+```bash
+python main.py
+```
 --- 
+
+
+## 🔄 O que mudou nesta atualização (AP2)
+
+Esta versão implementa:
+
+- ✅ **Análise semântica** com verificação de variáveis não declaradas ou duplicadas (via `tabela_simbolos.py`)
+- ✅ **Geração de código MEPA** para:
+  - Atribuições (`:=`)
+  - Expressões aritméticas (`+`, `-`, `*`, `div`, `mod`)
+  - Condições (`if ... then ... else`)
+  - Laços (`while ... do`)
+  - Entrada (`read`) e saída (`write`)
+- ✅ **Controle de rótulos** para desvios (ex: `DSVF L1`, `DSVS L2`)
+- ✅ Comentários explicativos adicionados no `parser.py` e `tabela_simbolos.py`
+
 ## 📖 Saiba Mais na Wiki
 
 - 📌 Todas as informações detalhadas sobre o projeto estão na nossa [Wiki](https://github.com/millagmgomes/AP1-Compiladores/wiki)
